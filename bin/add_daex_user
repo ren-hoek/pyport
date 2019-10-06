@@ -1,0 +1,35 @@
+#!/usr/bin/env python3
+import sys
+import os
+from pyport import swarm as sw
+
+
+port_api = sw.create_api_string(sys.argv, 1)
+
+token = sw.generate_token(os.environ['PORT_USER'], os.environ['PORT_PASS'], port_api)
+
+service_up = False
+while not service_up:
+    try:
+        containers = sw.get_container_summary(sw.list_containers(token, s=port_api))
+        cont_id = sw.get_service_value('id', 'daex_jupyter', containers)
+        node_name = sw.get_service_value('node_name', 'daex_jupyter', containers)
+        service_up = True
+    except:
+        service_up = False
+
+u = sys.argv[1]
+add = sw.exec_container(
+    cont_id,
+    [
+        'sh',
+        '-c',
+        'mkdir /home/' + u  + '; chown ' + u + ":" + u + ' /home/' + u
+    ],
+    token,
+    node_name,
+    port_api
+)
+
+print(add.text)
+

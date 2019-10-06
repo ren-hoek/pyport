@@ -1,0 +1,24 @@
+#!/usr/bin/env python3
+import sys
+import os
+from pyport import swarm as sw
+
+
+port_api = sw.create_api_string(sys.argv, 2)
+
+token = sw.generate_token(os.environ['PORT_USER'], os.environ['PORT_PASS'], port_api)
+
+swarm_id = sw.get_swarm_id(token, port_api)
+
+stacks = sw.list_stacks(token, port_api)
+stack_id = str(list(map(lambda x: x['Id'], filter(lambda x: x['Name'] == sys.argv[1], stacks)))[0])
+remove = sw.remove_stack(stack_id, token, port_api)
+deploy = sw.deploy_stack(
+    swarm_id,
+    token,
+    sys.argv[1],
+    sys.argv[2],
+    s = port_api
+)
+
+print(deploy.text)

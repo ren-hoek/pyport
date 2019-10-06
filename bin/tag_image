@@ -1,0 +1,20 @@
+#!/usr/bin/env python3
+import sys
+import os
+from pyport import swarm as sw
+
+
+port_api = sw.create_api_string(sys.argv, 2)
+
+token = sw.generate_token(os.environ['PORT_USER'], os.environ['PORT_PASS'], port_api)
+images = sw.drop_blank_tags(sw.list_images(token, s = port_api))
+img_id = list(map(lambda x: x['Id'], filter(lambda x: sys.argv[1] in x['RepoTags'], images)))[0]
+
+tag = sw.tag_image(
+    token,
+    img_id,
+    sys.argv[2],
+    s = port_api
+)
+
+print(tag.text)

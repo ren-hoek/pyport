@@ -1,0 +1,16 @@
+#!/usr/bin/env python3
+import sys
+import os
+from pyport import swarm as sw
+
+
+port_api = sw.create_api_string(sys.argv, 1)
+
+token = sw.generate_token(os.environ['PORT_USER'], os.environ['PORT_PASS'], port_api)
+
+stacks = sw.list_stacks(token, port_api)
+stack_id = sw.get_stack_id(sys.argv[1], stacks)
+remove = sw.remove_stack(stack_id, token, port_api)
+
+print(remove.text)
+

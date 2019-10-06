@@ -1,0 +1,21 @@
+#!/usr/bin/env python3
+import sys
+import os
+from pyport import swarm as sw
+
+
+port_api = sw.create_api_string(sys.argv, 2)
+
+token = sw.generate_token(os.environ['PORT_USER'], os.environ['PORT_PASS'], port_api)
+params = {'t': sys.argv[1]}
+
+image = sw.build_image(
+    'feynman',
+    token,
+    params,
+    sys.argv[2],
+    port_api
+)
+
+sw.print_api_output(image)
+
