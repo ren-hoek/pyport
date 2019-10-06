@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='pyport',
-    version='0.1',
+    version='0.2',
     author="Ren Hoek",
     author_email="ren.hoek@daex.com",
     description="A Portainer API wrapper",
