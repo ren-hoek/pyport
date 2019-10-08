@@ -6,6 +6,86 @@ import json
 import requests as rt
 
 
+def list_secrets(t: str, n: str ='', s: str = 'http://portainer:9000/api', e: str = '1') -> list:
+    """List swarm secrets.
+
+    List the secrets in a node.
+
+    Args:
+        t: Authorization token
+        n: Swarm node to make request on
+        s: Portainer server api endpoint
+        e: Docker endpoint id
+    Returns:
+        List of secrets
+
+    """
+    return rt.get(s + '/endpoints/' + e + '/docker/secrets', headers = create_header(t, n)).json()
+
+
+def create_secret(t: str, a: str, b: str, n: str ='', s: str = 'http://portainer:9000/api', e: str = '1') -> dict:
+    """Create swarm secret.
+
+    Create a docker secret.
+
+    Args:
+        t: Authorization token
+        b: Path to file containing secret value
+        n: Swarm node to make request on
+        s: Portainer server api endpoint
+        e: Docker endpoint id
+    Returns:
+        ID of created secret
+
+    """
+    return rt.post(
+        s + '/endpoints/' + e + '/docker/secrets/create',
+        headers = create_header(t, n),
+        data = get_json(
+            {
+                'Name': a,
+                'Data': base64.b64encode(open(b, 'rb').read()).decode('utf-8')
+            }
+        )
+    ).json()
+
+
+def get_secret(t: str, k: str, n: str ='', s: str = 'http://portainer:9000/api', e: str = '1') -> dict:
+    """Get docker secret.
+
+    Get value of a docker secret.
+
+    Args:
+        t: Authorization token
+        k: ID of docker secret
+        n: Swarm node to make request on
+        s: Portainer server api endpoint
+        e: Docker endpoint id
+    Returns:
+        Docker secret details
+
+    """
+    return rt.get(s + '/endpoints/' + e + '/docker/secrets/' + k, headers = create_header(t, n)).json()
+
+
+def remove_secret(t: str, k: str, n: str ='', s: str = 'http://portainer:9000/api', e: str = '1') -> dict:
+    """Remove docker secret.
+
+    Deletes a docker secret.
+
+    Args:
+        t: Authorization token
+        k: ID of docker secret
+        n: Swarm node to make request on
+        s: Portainer server api endpoint
+        e: Docker endpoint id
+    Returns:
+        API response
+
+    """
+    return rt.delete(s + '/endpoints/' + e + '/docker/secrets/' + k, headers = create_header(t, n))
+
+
 def get_service_value(v: str, s: str, c: list) -> str:
     """Get service value.
 
@@ -45,7 +125,7 @@ def get_stack_id(x: str, y: list) -> int:
 
     Args:
         x: Portainer stack name
-        y; Deployed portainer stacks
+        y: Deployed portainer stacks
     Return:
         String portainer stack id
 
@@ -119,10 +199,10 @@ def get_json(x: dict) -> str:
     return json.dumps(x)
 
 
-def initialize_admin_account(p: str ='password', s: str = 'http://portainer:9000/api') -> dict:
+def initialize_admin_account(p: str, s: str = 'http://portainer:9000/api') -> dict:
     """Set portainer admin password.
 
-    Sets the portainer admin password defaults to password.
+    Sets the portainer admin password.
 
     Args:
         p: Password
@@ -185,6 +265,20 @@ def list_images(t: str, n: str ='', s: str = 'http://portainer:9000/api', e: str
 
 
 def get_image(i: str, t: str, n: str ='', s: str = 'http://portainer:9000/api', e: str = '1') -> dict:
+    """Get swarm id.
+
+    Get the swarm id needed for deploying stacks.
+
+    Args:
+        i: Image id
+        t: Authorization token
+        n: Swarm node name
+        s: Portainer server api endpoint
+        e: Docker endpoint id
+    Returns:
+        Details of docker image
+
+    """
     return rt.get(s + '/endpoints/' + e + '/docker/images/' + i + '/json', headers = create_header(t, n)).json()
 
 
@@ -359,10 +453,11 @@ def pull_image(i: str, t: str, n: str = '', s: str = 'http://portainer:9000/api'
     )
 
 
-def push_image(i: str, t: str, n: str = '', u: str = "admin", p:str = "password", r: str = 'docker.service:5000', s: str = 'http://portainer:9000/api', e: str = '1') -> dict:
-    """Push docker image.
+def push_image(i: str, t: str, u: str = '', p:str = '', r: str = 'docker.service:5000', n: str = '', s: str = 'http://portainer:9000/api', e: str = '1') -> dict:
+    """Push docker image to repository.
 
     Push an image to Dockerhub or a private registry.
+    Leaving username and password blank will use an unsecured repo.
     Private registeries need to be defined within Portainer.
 
     Args:

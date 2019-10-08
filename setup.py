@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='pyport',
-    version='0.2.1',
+    version='0.2.2',
     author="Ren Hoek",
     author_email="ren.hoek@daex.com",
     description="A Portainer API wrapper",
@@ -16,7 +16,8 @@ setuptools.setup(
     scripts=[
         'bin/add_daex_user', 'bin/add_folder', 'bin/build_image',
         'bin/deploy_stack', 'bin/init_admin', 'bin/pull_image',
-        'bin/redeploy_stack', 'bin/remove_stack', 'bin/tag_image'
+        'bin/redeploy_stack', 'bin/remove_stack', 'bin/tag_image',
+        'bin/add_secret', 'bin/push_image', 'bin/remove_secret'
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
