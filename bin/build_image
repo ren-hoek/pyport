@@ -7,7 +7,7 @@ from pyport import swarm as sw
 port_api = sw.create_api_string(sys.argv, 2)
 
 token = sw.generate_token(os.environ['PORT_USER'], os.environ['PORT_PASS'], port_api)
-params = {'t': sys.argv[1]}
+params = {'t': sys.argv[1], 'q': 'true'}
 
 image = sw.build_image(
     'feynman',
@@ -17,5 +17,5 @@ image = sw.build_image(
     port_api
 )
 
-sw.print_api_output(image)
+print(image.content)
 
