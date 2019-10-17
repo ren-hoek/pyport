@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import sys
 import os
+import time
 from pyport import swarm as sw
 
 
@@ -9,13 +10,25 @@ port_api = sw.create_api_string(sys.argv, 2)
 token = sw.generate_token(os.environ['PORT_USER'], os.environ['PORT_PASS'], port_api)
 params = {'t': sys.argv[1], 'q': 'true'}
 
-image = sw.build_image(
-    'feynman',
-    token,
-    params,
-    sys.argv[2],
-    port_api
-)
+status_code = 502
+resp_count = 0
+while status_code != 200:
+    resp_count += 1
+    resp_start = time.time()
+    image = sw.build_image(
+        'feynman',
+        token,
+        params,
+        sys.argv[2],
+        port_api
+    )
+    status_code = image.status_code
+    resp_end = time.time()
+    print(
+        "Call: ", resp_count,
+        " Response: ", image.status_code,
+        " Time: ", round(resp_end - resp_start))
 
-print(image.content)
+
+print(image.status_code)
 
