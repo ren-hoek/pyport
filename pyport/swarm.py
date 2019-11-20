@@ -331,7 +331,8 @@ def get_container_volumes(c: dict) -> list:
 def get_container_details(c: dict) -> dict:
     """Create container summary.
 
-    Create a summary of a container.
+    Create a summary of a container. Ignores swarm labels
+    for non service containers.
 
     Args:
         c: Container dictionary from portainer api
@@ -341,13 +342,22 @@ def get_container_details(c: dict) -> dict:
     """
     d = dict()
     d['id'] = c['Id']
-    d['stack_name'] = c['Labels']['com.docker.stack.namespace']
-    d['service_id'] = c['Labels']['com.docker.swarm.service.id']
-    d['service_name'] = c['Labels']['com.docker.swarm.service.name']
-    d['node_id'] = c['Labels']['com.docker.swarm.node.id']
-    d['node_name'] = c['Portainer']['Agent']['NodeName']
-    d['task_id'] = c['Labels']['com.docker.swarm.task.id']
-    d['task_name'] = c['Labels']['com.docker.swarm.task.name']
+    if 'com.docker.stack.namespace' in c['Labels']:
+        d['stack_name'] = c['Labels']['com.docker.stack.namespace']
+        d['service_id'] = c['Labels']['com.docker.swarm.service.id']
+        d['service_name'] = c['Labels']['com.docker.swarm.service.name']
+        d['node_id'] = c['Labels']['com.docker.swarm.node.id']
+        d['node_name'] = c['Portainer']['Agent']['NodeName']
+        d['task_id'] = c['Labels']['com.docker.swarm.task.id']
+        d['task_name'] = c['Labels']['com.docker.swarm.task.name']
+    else:
+        d['stack_name'] = "NA"
+        d['service_id'] = "NA"
+        d['service_name'] = "NA"
+        d['node_id'] = "NA"
+        d['node_name'] = c['Portainer']['Agent']['NodeName']
+        d['task_id'] = "NA"
+        d['task_name'] = "NA"
     d['volumes'] = get_container_volumes(c)
     return d
 
