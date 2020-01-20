@@ -6,11 +6,12 @@ from pyport import swarm as sw
 
 port_api = sw.create_api_string(sys.argv, 3)
 token = sw.generate_token(os.environ['PORT_USER'], os.environ['PORT_PASS'], port_api)
+endpoint_id = sw.get_endpoint_id(token, 'primary', port_api)
 
 service_up = False
 while not service_up:
     try:
-        containers = sw.get_container_summary(sw.list_containers(token, s=port_api))
+        containers = sw.get_container_summary(sw.list_containers(token, s=port_api, e=endpoint_id))
         cont_id = sw.get_service_value('id', sys.argv[1], containers)
         node_name = sw.get_service_value('node_name', sys.argv[1], containers)
         service_up = True
@@ -23,7 +24,8 @@ add = sw.add_to_container(
     token,
     sys.argv[2],
     sys.argv[3],
-    port_api
+    port_api,
+    endpoint_id
 )
 
 print(add.text)

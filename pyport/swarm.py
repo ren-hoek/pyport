@@ -399,6 +399,38 @@ def exec_container(c: str, d: list, t: str, n: str, s: str = 'http://portainer:9
     return rt.post(endpoint + '/exec/' + job + '/start',  headers = create_header(t, n), data = start_data)
 
 
+def get_id_from_name(x: str, y: list) -> int:
+    """Get id from api search results.
+
+    Get the id for a given name.
+
+    Args:
+        x: Portainer name
+        y: List of results
+    Return:
+        String portainer id
+
+    """
+    return str(list(filter(lambda z: z['Name'] == x, y))[0]['Id'])
+
+
+def get_endpoint_id(t: str, n: str = 'primary', s: str = 'http://portainer:9000/api') -> str:
+    """Get endpoint id.
+
+    Get the portainer endpoint id.
+
+    Args:
+        t: Authorization token
+        n: Docker endpoint name
+        s: Portainer server api endpoint
+    Returns:
+        Swarm id string
+
+    """
+    endpoints = rt.get(s + '/endpoints', headers = create_header(t)).json()
+    return get_id_from_name(n, endpoints)
+
+
 def get_swarm_id(t: str, s: str = 'http://portainer:9000/api', e: str = '1') -> str:
     """Get swarm id.
 
@@ -406,8 +438,8 @@ def get_swarm_id(t: str, s: str = 'http://portainer:9000/api', e: str = '1') -> 
 
     Args:
         t: Authorization token
-        s: Portainer server api endpoint
         e: Docker endpoint id
+        s: Portainer server api endpoint
     Returns:
         Swarm id string
 

@@ -6,14 +6,17 @@ from pyport import swarm as sw
 
 port_api = sw.create_api_string(sys.argv, 2)
 token = sw.generate_token(os.environ['PORT_USER'], os.environ['PORT_PASS'], port_api)
-swarm_id = sw.get_swarm_id(token, port_api)
+endpoint_id = sw.get_endpoint_id(token, 'primary', port_api)
+
+swarm_id = sw.get_swarm_id(token, port_api, endpoint_id)
 
 deploy = sw.deploy_stack(
     swarm_id,
     token,
     sys.argv[1],
     sys.argv[2],
-    s = port_api
+    s = port_api,
+    e = endpoint_id
 )
 
 print(deploy.text)

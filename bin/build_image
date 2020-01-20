@@ -6,8 +6,9 @@ from pyport import swarm as sw
 
 
 port_api = sw.create_api_string(sys.argv, 2)
-
 token = sw.generate_token(os.environ['PORT_USER'], os.environ['PORT_PASS'], port_api)
+endpoint_id = sw.get_endpoint_id(token, 'primary', port_api)
+
 params = {'t': sys.argv[1], 'q': 'true'}
 
 status_code = 502
@@ -20,7 +21,8 @@ while status_code != 200:
         token,
         params,
         sys.argv[2],
-        port_api
+        port_api,
+        endpoint_id
     )
     status_code = image.status_code
     resp_end = time.time()

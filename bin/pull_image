@@ -5,13 +5,14 @@ from pyport import swarm as sw
 
 
 port_api = sw.create_api_string(sys.argv, 1)
-
 token = sw.generate_token(os.environ['PORT_USER'], os.environ['PORT_PASS'], port_api)
+endpoint_id = sw.get_endpoint_id(token, 'primary', port_api)
 
 pull = sw.pull_image(
     sys.argv[1],
     token,
-    s = port_api
+    s = port_api,
+    e = endpoint_id
 )
 
 print(pull.text)
