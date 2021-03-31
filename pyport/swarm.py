@@ -6,7 +6,7 @@ import json
 import requests as rt
 
 
-def list_secrets(t: str, n: str ='', s: str = 'http://portainer:9000/api', e: str = '1') -> list:
+def list_secrets(t, n, s='http://portainer:9000/api', e= '1'):
     """List swarm secrets.
 
     List the secrets in a node.
@@ -23,7 +23,7 @@ def list_secrets(t: str, n: str ='', s: str = 'http://portainer:9000/api', e: st
     return rt.get(s + '/endpoints/' + e + '/docker/secrets', headers = create_header(t, n)).json()
 
 
-def create_secret(t: str, a: str, b: str, n: str ='', s: str = 'http://portainer:9000/api', e: str = '1') -> dict:
+def create_secret(t, a, b, n='', s='http://portainer:9000/api', e='1'):
     """Create swarm secret.
 
     Create a docker secret.
@@ -50,7 +50,7 @@ def create_secret(t: str, a: str, b: str, n: str ='', s: str = 'http://portainer
     ).json()
 
 
-def get_secret(t: str, k: str, n: str ='', s: str = 'http://portainer:9000/api', e: str = '1') -> dict:
+def get_secret(t, k, n='', s='http://portainer:9000/api', e='1'):
     """Get docker secret.
 
     Get value of a docker secret.
@@ -68,7 +68,7 @@ def get_secret(t: str, k: str, n: str ='', s: str = 'http://portainer:9000/api',
     return rt.get(s + '/endpoints/' + e + '/docker/secrets/' + k, headers = create_header(t, n)).json()
 
 
-def remove_secret(t: str, k: str, n: str ='', s: str = 'http://portainer:9000/api', e: str = '1') -> dict:
+def remove_secret(t, k, n='', s='http://portainer:9000/api', e='1'):
     """Remove docker secret.
 
     Deletes a docker secret.
@@ -86,7 +86,7 @@ def remove_secret(t: str, k: str, n: str ='', s: str = 'http://portainer:9000/ap
     return rt.delete(s + '/endpoints/' + e + '/docker/secrets/' + k, headers = create_header(t, n))
 
 
-def get_service_value(v: str, s: str, c: list) -> str:
+def get_service_value(v, s, c):
     """Get service value.
 
     Returns a specified value from a
@@ -103,7 +103,7 @@ def get_service_value(v: str, s: str, c: list) -> str:
     return list(map(lambda x: x[v], filter(lambda x: x['service_name'] == s, c)))[0]
 
 
-def drop_blank_tags(i: list) -> list:
+def drop_blank_tags(i):
     """Drop blank tags.
 
     Drops the blank tags from a portainer image list.
@@ -117,7 +117,7 @@ def drop_blank_tags(i: list) -> list:
     return list(filter(lambda x: x['RepoTags'] != None, i))
 
 
-def get_stack_id(x: str, y: list) -> int:
+def get_stack_id(x, y):
     """Get stack id.
 
     Get the portainer stack id for a given
@@ -133,7 +133,7 @@ def get_stack_id(x: str, y: list) -> int:
     return str(list(filter(lambda z: z['Name'] == x, y))[0]['Id'])
 
 
-def create_api_string(x: list, y: int) -> str:
+def create_api_string(x, y):
     """Create the portainer api string.
 
     Creates the string for connection to the
@@ -152,7 +152,7 @@ def create_api_string(x: list, y: int) -> str:
         return 'http://' + x[len(x) -1] + ':9000/api'
 
 
-def make_tarfile(d:str) -> bytes:
+def make_tarfile(d):
     """Create a tarfile.
 
     Create an in-memory byte representation of a .tgz
@@ -171,7 +171,7 @@ def make_tarfile(d:str) -> bytes:
     return t
 
 
-def get_dict(x: str) -> dict:
+def get_dict(x):
     """Convert JSON to Python dict.
 
     Convert a JSON String into a Python dictionary.
@@ -185,7 +185,7 @@ def get_dict(x: str) -> dict:
     return json.loads(x)
 
 
-def get_json(x: dict) -> str:
+def get_json(x):
     """Convert Python dict to JSON.
 
     Convert Python dictionary into a JSON string.
@@ -199,7 +199,7 @@ def get_json(x: dict) -> str:
     return json.dumps(x)
 
 
-def initialize_admin_account(p: str, s: str = 'http://portainer:9000/api') -> dict:
+def initialize_admin_account(p, s= 'http://portainer:9000/api'):
     """Set portainer admin password.
 
     Sets the portainer admin password.
@@ -214,7 +214,7 @@ def initialize_admin_account(p: str, s: str = 'http://portainer:9000/api') -> di
     return rt.post(s + '/users/admin/init', data = get_json({'Username': 'admin', 'Password': p}))
 
 
-def generate_token(u: str, p: str, s: str = 'http://portainer:9000/api') -> str:
+def generate_token(u, p, s='http://portainer:9000/api'):
     """Generate portainer token.
 
     Generate a token for using Portainer api.
@@ -231,7 +231,7 @@ def generate_token(u: str, p: str, s: str = 'http://portainer:9000/api') -> str:
     return rt.post(s + '/auth', data = get_json({'Username': u, 'Password': p})).json()['jwt']
 
 
-def create_header(t: str, n: str = '', tar: bool = False ) -> str:
+def create_header(t, n='', tar=False):
     """Create header for API request.
 
     Args:
@@ -247,7 +247,7 @@ def create_header(t: str, n: str = '', tar: bool = False ) -> str:
         return({'Authorization': 'Bearer ' + t, 'X-PortainerAgent-Target': n, 'Content-Type': 'application/x-tar'})
 
 
-def list_images(t: str, n: str ='', s: str = 'http://portainer:9000/api', e: str = '1') -> list:
+def list_images(t, n='', s='http://portainer:9000/api', e='1'):
     """List swarm containers.
 
     List the images on a node.
@@ -264,7 +264,7 @@ def list_images(t: str, n: str ='', s: str = 'http://portainer:9000/api', e: str
     return rt.get(s + '/endpoints/' + e + '/docker/images/json', headers = create_header(t, n)).json()
 
 
-def get_image(i: str, t: str, n: str ='', s: str = 'http://portainer:9000/api', e: str = '1') -> dict:
+def get_image(i, t, n='', s='http://portainer:9000/api', e='1'):
     """Get swarm id.
 
     Get the swarm id needed for deploying stacks.
@@ -282,7 +282,7 @@ def get_image(i: str, t: str, n: str ='', s: str = 'http://portainer:9000/api', 
     return rt.get(s + '/endpoints/' + e + '/docker/images/' + i + '/json', headers = create_header(t, n)).json()
 
 
-def list_services(t: str, s: str = 'http://portainer:9000/api', e: str = '1') -> list:
+def list_services(t, s='http://portainer:9000/api', e='1') :
     """List swarm services.
 
     List the services on the swarm.
@@ -298,7 +298,7 @@ def list_services(t: str, s: str = 'http://portainer:9000/api', e: str = '1') ->
     return rt.get(s + '/endpoints/' + e + '/docker/services', headers = create_header(t)).json()
 
 
-def list_containers(t: str, n: str ='', s: str = 'http://portainer:9000/api', e: str = '1') -> list:
+def list_containers(t, n='', s='http://portainer:9000/api', e='1'):
     """List swarm containers.
 
     List the container on the swarm.
@@ -314,7 +314,7 @@ def list_containers(t: str, n: str ='', s: str = 'http://portainer:9000/api', e:
     return rt.get(s + '/endpoints/' + e + '/docker/containers/json', headers = create_header(t, n)).json()
 
 
-def get_container_volumes(c: dict) -> list:
+def get_container_volumes(c):
     """Extract volume names.
 
     Extracts the volume names for a container.
@@ -328,7 +328,7 @@ def get_container_volumes(c: dict) -> list:
     return list(map(lambda x: x['Name'], filter(lambda x: x['Type'] == 'volume', c['Mounts'])))
 
 
-def get_container_details(c: dict) -> dict:
+def get_container_details(c):
     """Create container summary.
 
     Create a summary of a container. Ignores swarm labels
@@ -352,17 +352,17 @@ def get_container_details(c: dict) -> dict:
         d['task_name'] = c['Labels']['com.docker.swarm.task.name']
     else:
         d['stack_name'] = "NA"
-        d['service_id'] = "NA"
-        d['service_name'] = "NA"
-        d['node_id'] = "NA"
+        d['service_id'] = c['Labels']['com.docker.swarm.service.id']
+        d['service_name'] = c['Labels']['com.docker.swarm.service.name']
+        d['node_id'] = c['Labels']['com.docker.swarm.node.id']
         d['node_name'] = c['Portainer']['Agent']['NodeName']
-        d['task_id'] = "NA"
-        d['task_name'] = "NA"
+        d['task_id'] = c['Labels']['com.docker.swarm.task.id']
+        d['task_name'] = c['Labels']['com.docker.swarm.task.name']
     d['volumes'] = get_container_volumes(c)
     return d
 
 
-def get_container_summary(c: list) -> list:
+def get_container_summary(c):
     """Summarize swarm container output.
 
     Produces a summerized version of the container list.
@@ -376,7 +376,7 @@ def get_container_summary(c: list) -> list:
     return list(map(get_container_details, c))
 
 
-def exec_container(c: str, d: list, t: str, n: str, s: str = 'http://portainer:9000/api', e: str = '1') -> dict:
+def exec_container(c, d, t, n, s='http://portainer:9000/api', e='1'):
     """Execute command within container.
 
     Execute a command within a running container.
@@ -399,7 +399,7 @@ def exec_container(c: str, d: list, t: str, n: str, s: str = 'http://portainer:9
     return rt.post(endpoint + '/exec/' + job + '/start',  headers = create_header(t, n), data = start_data)
 
 
-def get_id_from_name(x: str, y: list) -> int:
+def get_id_from_name(x, y):
     """Get id from api search results.
 
     Get the id for a given name.
@@ -414,7 +414,7 @@ def get_id_from_name(x: str, y: list) -> int:
     return str(list(filter(lambda z: z['Name'] == x, y))[0]['Id'])
 
 
-def get_endpoint_id(t: str, n: str = 'primary', s: str = 'http://portainer:9000/api') -> str:
+def get_endpoint_id(t, n='primary', s='http://portainer:9000/api'):
     """Get endpoint id.
 
     Get the portainer endpoint id.
@@ -431,7 +431,7 @@ def get_endpoint_id(t: str, n: str = 'primary', s: str = 'http://portainer:9000/
     return get_id_from_name(n, endpoints)
 
 
-def get_swarm_id(t: str, s: str = 'http://portainer:9000/api', e: str = '1') -> str:
+def get_swarm_id(t, s='http://portainer:9000/api', e='1'):
     """Get swarm id.
 
     Get the swarm id needed for deploying stacks.
@@ -447,7 +447,7 @@ def get_swarm_id(t: str, s: str = 'http://portainer:9000/api', e: str = '1') -> 
     return rt.get(s + '/endpoints/' + e + '/docker/swarm', headers = create_header(t)).json()['ID']
 
 
-def add_to_container(c: str, n: str, t:str, p: str, f: str, s: str = 'http://portainer:9000/api', e: str = '1') -> dict:
+def add_to_container(c, n, t, p, f, s='http://portainer:9000/api', e='1'):
     """Add files to running container.
 
     Adds a .tgz archive to a running container.
@@ -472,7 +472,7 @@ def add_to_container(c: str, n: str, t:str, p: str, f: str, s: str = 'http://por
     )
 
 
-def pull_image(i: str, t: str, n: str = '', s: str = 'http://portainer:9000/api', e: str = '1') -> dict:
+def pull_image(i, t, n='', s='http://portainer:9000/api', e='1'):
     """Pull docker image.
 
     Pull an image from Dockerhub or from a private registry.
@@ -495,7 +495,7 @@ def pull_image(i: str, t: str, n: str = '', s: str = 'http://portainer:9000/api'
     )
 
 
-def push_image(i: str, t: str, u: str = '', p:str = '', r: str = 'docker.service:5000', n: str = '', s: str = 'http://portainer:9000/api', e: str = '1') -> dict:
+def push_image(i, t, u='', p='', r='docker.service:5000', n='', s='http://portainer:9000/api', e='1'):
     """Push docker image to repository.
 
     Push an image to Dockerhub or a private registry.
@@ -528,7 +528,7 @@ def push_image(i: str, t: str, u: str = '', p:str = '', r: str = 'docker.service
     )
 
 
-def build_image(n: str, t:str, p: dict, d: str = 'Dockerfile', s: str = 'http://portainer:9000/api', e: str = '1') -> dict:
+def build_image(n, t, p, d= 'Dockerfile', s='http://portainer:9000/api', e='1'):
     """Build docker image.
 
     Build a docker image from a .tgz archive build context.
@@ -547,7 +547,7 @@ def build_image(n: str, t:str, p: dict, d: str = 'Dockerfile', s: str = 'http://
     return rt.post(s + '/endpoints/' + e + '/docker/build', headers = create_header(t, n, True), params = p, data = make_tarfile(d))
 
 
-def tag_image(t:str, i: str, r: str, n: str = '', s: str = 'http://portainer:9000/api', e: str = '1') -> dict:
+def tag_image(t, i, r, n='', s='http://portainer:9000/api', e='1'):
     """Tag image.
 
     Add a new tag to a Docker image.
@@ -569,7 +569,7 @@ def tag_image(t:str, i: str, r: str, n: str = '', s: str = 'http://portainer:900
     )
 
 
-def list_stacks(t: str, s: str = 'http://portainer:9000/api', e: str = '1') -> list:
+def list_stacks(t, s='http://portainer:9000/api', e='1'):
     """List swarm stacks.
 
     List swarm stacks deployed via Portainer api.
@@ -585,7 +585,7 @@ def list_stacks(t: str, s: str = 'http://portainer:9000/api', e: str = '1') -> l
     return rt.get(s +'/stacks', headers = create_header(t)).json()
 
 
-def deploy_stack(w: str, t:str, n: str, d: str, y: str = '1', s: str = 'http://portainer:9000/api', e: str = '1') -> dict:
+def deploy_stack(w, t, n, d, y='1', s='http://portainer:9000/api', e='1'):
     """Deploy swarm stack.
 
     Deploy a swarm stack with the Portainer api.
@@ -607,7 +607,7 @@ def deploy_stack(w: str, t:str, n: str, d: str, y: str = '1', s: str = 'http://p
     return rt.post(s +'/stacks', headers = create_header(t), params = params, data = get_json(data))
 
 
-def remove_stack(w: str, t: str, s: str = 'http://portainer:9000/api', e: str = '1') -> dict:
+def remove_stack(w, t, s='http://portainer:9000/api', e='1'):
     """Remove swarm stack.
 
     Remove a swarm stack via the Portainer api.
@@ -624,7 +624,7 @@ def remove_stack(w: str, t: str, s: str = 'http://portainer:9000/api', e: str = 
     return rt.delete(s + '/stacks/' + w, headers = create_header(t), params = {'endpointId': e})
 
 
-def print_api_output(a: dict) -> bool:
+def print_api_output(a):
     """Print portainer api output.
 
     Prints the output from the portainer api
@@ -641,4 +641,105 @@ def print_api_output(a: dict) -> bool:
     for y in list_out:
         print(y)
     return True
+
+
+def list_nodes(t, s='http://portainer:9000/api', e='1'):
+    """List swarm nodes.
+
+    List the nodes on the swarm.
+
+    Args:
+        t: Authorization token
+        s: Portainer server api endpoint
+        e: Docker endpoint id
+    Returns:
+        List of sevice details
+
+    """
+    return rt.get(s + '/endpoints/' + e + '/docker/nodes', headers = create_header(t)).json()
+
+
+def get_node(t, n, s='http://portainer:9000/api', e='1'):
+    """List swarm nodes.
+
+    List the nodes on the swarm.
+
+    Args:
+        t: Authorization token
+        s: Portainer server api endpoint
+        e: Docker endpoint id
+    Returns:
+        List of sevice details
+
+    """
+    return rt.get(s + '/endpoints/' + e + '/docker/nodes/' + n , headers = create_header(t)).json()
+
+
+def describe_swarm(t, s='http://portainer:9000/api', e='1'):
+    """List swarm nodes.
+
+    List the nodes on the swarm.
+
+    Args:
+        t: Authorization token
+        s: Portainer server api endpoint
+        e: Docker endpoint id
+    Returns:
+        List of sevice details
+
+    """
+    return rt.get(s + '/endpoints/' + e + '/docker/swarm', headers = create_header(t)).json()
+
+
+def get_labels(t, n, s='http://portainer:9000/api', e='1'):
+    """Deploy swarm stack.
+
+    Deploy a swarm stack with the Portainer api.
+
+    Args:
+        w: Swarm id
+        t: Authorization token
+        n: Stack name
+        d: Path to docker-compose
+        y: Deployment type 1 (Swarm) 2 (Compose)
+        s: Portainer server api endpoint
+        e: Docker endpoint id
+    Returns:
+        Portainer api response
+
+    """
+    return rt.get(
+	s +'/endpoints/' + e + '/docker/nodes/' + n,
+	headers = create_header(t)
+    ).json()["Spec"]["Labels"]
+
+
+def add_label(w, t, n, s='http://portainer:9000/api', e='1'):
+    """Deploy swarm stack.
+
+    Deploy a swarm stack with the Portainer api.
+
+    Args:
+        w: Swarm id
+        t: Authorization token
+        n: Stack name
+        d: Path to docker-compose
+        y: Deployment type 1 (Swarm) 2 (Compose)
+        s: Portainer server api endpoint
+        e: Docker endpoint id
+    Returns:
+        Portainer api response
+
+    """
+
+    labels = get_labels(t, n, s, e)
+    labels[w] = 'True'
+
+    data = {'Availability': 'active', 'Role': 'worker', 'Labels': labels}
+    return rt.post(
+	s +'/endpoints/' + e + '/docker/nodes/' + n + '/update',
+	headers = create_header(t),
+	params = {'version': get_node(t, n, s, e)['Version']['Index']},
+	data = get_json(data)
+    )
 
